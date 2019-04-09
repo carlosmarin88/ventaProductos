@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+<header th:replace="layout/layout :: header">
+</header>
+	<div class="container" style="margin-top:75px">
+
+		<div class="card">
+			<div class="card-header" th:text="${titulo}">
+			</div>
+			<div class="card-body bg-light">
+				<div style="padding-bottom: 16px" class="card-title">
+					<a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary btn-xs" th:href="@{/form}"> Crear
+						cliente</a>
+					
+					<a class="btn btn-success btn-xs float-right" th:href="@{'/listar'(format=csv)}">CSV</a>
+					<a class="btn btn-outline-success btn-xs float-right" th:href="@{'/listar'(format=xml)}">XML</a>
+					<a class="btn btn-warning btn-xs float-right" th:href="@{'/listar'(format=json)}">JSON</a>				
+				</div>
+				<table border="1" class="table table-striped">
+					<thead class="thead-dark">
+						<tr>
+							<th>Id</th>
+							<th>Nombre</th>
+							<th>Apellido</th>
+							<th>Email</th>
+							<th>Fecha</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Crear Factura</th>
+							<th sec:authorize="hasRole('ROLE_USER')">ver</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Editar</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="cliente: ${clientes}">
+							<td th:text="${cliente.id}"></td>
+							<td th:text="${cliente.nombre}"></td>
+							<td th:text="${cliente.apellido}"></td>
+							<td th:text="${cliente.email}"></td>
+							<td th:text="${cliente.createAt}"></td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')">
+								<a class="btn btn-success btn-xs" th:href="@{'/factura/form/' + ${cliente.id}}" th:text="'Crear factura'"></a>
+							</td>
+							<td sec:authorize="hasRole('ROLE_USER')">
+								<a class="btn btn-info btn-xs"
+								th:href="@{/ver/} + ${cliente.id}" th:text="Ver"></a></td>				
+							<td sec:authorize="hasRole('ROLE_ADMIN')">
+								<a class="btn btn-primary btn-xs"
+								th:href="@{/form/} + ${cliente.id}" th:text="Editar"></a></td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')">
+								<a class="btn btn-danger btn-xs"
+								th:href="@{/eliminar/} + ${cliente.id}" th:text="Eliminar"
+								onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>
+						</tr>
+					</tbody>
+					<!-- el btn-xs hace que el boton sea mas pequeño -->
+				</table>
+				<nav th:replace="paginator-nav :: paginator">
+				</nav>
+			</div>
+
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer">
+	</footer>
+	<script src="/js/socket.io.js"></script>
+	<script src="/js/sockets.js"></script>
+	<script>
+	  //const socket = io('http://localhost');
+	</script>
+</body>
+</html>

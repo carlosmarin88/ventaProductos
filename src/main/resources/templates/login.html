@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	
+	<div class="container" style="margin-top:75px">
+	
+		<div class="card border-primary text-center">
+			<div class="card-header">
+				Por favor iniciar sesión
+			</div>
+			<div class="card-body">
+				<form th:action="@{/login}" method="post">
+					<div class="form-group col-sm-6">
+						<input class="form-control" required="required"
+						 autofocus="autofocus" placeholder="Nombre de usuario" type="text" name="username" id="username"/>
+					</div>
+					<div class="form-group col-sm-6">
+						<input class="form-control" required="required"
+						 placeholder="Contraseña" type="password" name="password" id="password"/>
+					</div>
+					<div class="form-group col-sm-6">
+						<input type="submit" class="btn btn-lag btn-primary btn-block" value="Ingresar"/>
+					</div>
+					<!-- esta es una manera de realizarlo manual, si se saca se pone automaticamente
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
+				</form>
+			</div>
+		</div>
+	
+	</div>
+	
+	
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

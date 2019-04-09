@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- el ultimo name space depende de spring security y su integracion con thymeleaf -->
+<head th:fragment="head">
+<meta charset="utf-8" />
+<title
+	th:text="'Spring Boot: MVC - Thymleaf - Data JPA  - ' + ${titulo}"></title>
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+</head>
+<body>
+	<header th:fragment="header">
+		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+			<a class="navbar-brand" href="#">Spring Boot</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Cliente</a></li>
+				</ul>
+				<ul class="navbar-nav navbar-right">
+					<li sec:authorize="!isAuthenticated()"><a class="btn btn-outline-primary" th:href="@{/login}">Sign
+							In</a></li>
+					
+					<li sec:authorize="isAuthenticated()" class="dropdown show">
+						<a class="btn btn-outline-primary dropdown-toggle" role="button"
+						id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"><span sec:authentication="name"></span></a>
+						
+						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+							<form id="logoutForm" th:action="@{/logout}" method="post">
+								<!-- a traves del evento obligo el submit del formulario -->
+								<button class="dropdown-item" onclick="document.getElementById('logoutForm').submit();" type="submit">Sign Out</button>
+							</form>
+						
+						</div>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		
+		<div class="alert alert-success" style="padding-top: 63px"
+			th:if="${success != null}" th:text="${success}"></div>
+		<div class="alert alert-danger" style="padding-top: 63px"
+			th:if="${error != null}" th:text="${error}"></div>
+		<div class="alert alert-warning" style="padding-top: 63px"
+			th:if="${warning != null}" th:text="${warning}"></div>
+		<div class="alert alert-info" style="padding-top: 63px"
+			th:if="${info != null}" th:text="${info}"></div>
+	</header>
+	<div class="container" style="margin-top: 75px">
+		<h1 th:text="${titulo}"
+			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"></h1>
+		<div style="padding-bottom: 16px">
+			<a class="btn btn-success btn-xs" th:href="@{/form}"> Crear
+				cliente</a>
+		</div>
+		<table border="1" class="table table-striped">
+			<thead class="thead-dark">
+				<tr>
+					<th>id</th>
+					<th>nombre</th>
+					<th>apellido</th>
+					<th>email</th>
+					<th>fecha</th>
+					<th>Editar</th>
+					<th>Eliminar</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="cliente: ${clientes}">
+					<td th:text="${cliente.id}"></td>
+					<td th:text="${cliente.nombre}"></td>
+					<td th:text="${cliente.apellido}"></td>
+					<td th:text="${cliente.email}"></td>
+					<td th:text="${cliente.createAt}"></td>
+					<td><a class="btn btn-primary btn-xs"
+						th:href="@{/form/} + ${cliente.id}" th:text="Editar"></a></td>
+					<td><a class="btn btn-danger btn-xs"
+						th:href="@{/eliminar/} + ${cliente.id}" th:text="Eliminar"
+						onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>
+				</tr>
+			</tbody>
+			<!-- el btn-xs hace que el boton sea mas pequeño -->
+		</table>
+	</div>
+	<footer th:fragment="footer" class="container"
+		style="padding-top: 20px">
+		<hr>
+		</br> <img width="200px" height="100px" th:src="@{/images/spring_boot.png}"
+			src="Spring logo" />
+		<p sec:authorize="isAuthenticated()">
+			Usuario logueado: <span sec:authentication="name"></span> | Roles: <span
+				sec:authentication="principal.authorities"></span>
+		</p>
+		<p>
+			Powered by <a href="https://projets.spring.io/spring-boot">
+				Spring Boot</a> y <a href="http://www.thymeleaf.org">Thymeleaf</a>
+		</p>
+		<p>Este proyecto fue desarrollado en IDE Eclipse + Spring plugins
+			(STS Spring tool)</p>
+		<!-- optional javascript -->
+		<script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+		<script th:src="@{/js/popper.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/jquery-ui.min.js}"></script>
+
+		<!-- 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+		<!-- 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
+		<!-- 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+	</footer>
+</body>
+</html>
